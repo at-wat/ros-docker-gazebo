@@ -1,6 +1,8 @@
-# ROS Kinetic + Gazebo on Docker HOWTO
+# ROS Kinetic + Gazebo + Rviz on Docker
 
-This tutorial is focused on those people that have Ubuntu 14.04 + ROS Indigo and they want to run Gazebo 7 or later.
+This package is a demonstration of gazebo + rviz on docker.
+Simulated turtlebot is controlled by a gamepad.
+docker-compose.yml for Intel and ATI graphic board is also provided.
 
 ## Step 1: Install Docker
 Install docker https://docs.docker.com/engine/installation/linux/ubuntu/
@@ -11,23 +13,17 @@ To run docker without super user:
       sudo gpasswd -a ${USER} docker
       sudo service docker restart
 
-## Step 2: Use NVIDIA acceleration
+## Step 2: Building the container
 
-Install nvidia-docker (to get HW acceleration) https://github.com/NVIDIA/nvidia-docker/wiki
+      docker-compose build
 
-## Step 3: Creating the container
+## Step 3: Start the container
 
-This repository contain the Dockerfile. Move into the directory containing the file and type
+      docker-compose up
 
-The command below will **create** the container from the base image if it doesn't exist and log you in. 
+ros-kinetic-kobuki container often fails because of nodelet load timing.
+Try `docker-compose restart ros-kinetic-kobuki` to reload it.
 
-    docker build -t ros-kinetic-gazebo7 .
-
-## Step 4: Start the container
-
-To make it easier, I created the launcher **launch_docker.sh** (you might need to call **chmod +x ./launch_docker.sh** first).
-
-     ./launch_docker.sh
 
 # References
 

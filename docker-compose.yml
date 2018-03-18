@@ -1,0 +1,54 @@
+version: '2'
+services:
+  roscore:
+    image: ros:kinetic
+    command: ["roscore"]
+
+  ros-kinetic-gazebo:
+    image: ros-kinetic-gazebo
+    build: .
+    environment:
+      DISPLAY:
+      QT_X11_NO_MITSHM: "1"
+      ROS_MASTER_URI: "http://roscore:11311/"
+      TURTLEBOT_GAZEBO_WORLD_FILE: "/opt/ros/kinetic/share/turtlebot_gazebo/worlds/playground.world"
+    volumes:
+      - "/tmp/.X11-unix:/tmp/.X11-unix"
+    devices:
+      - "/dev/dri:/dev/dri"
+    command: ["roslaunch", "turtlebot_gazebo", "turtlebot_world.launch"]
+    depends_on:
+      - roscore
+
+  ros-kinetic-teleop:
+    image: ros-kinetic-gazebo
+    environment:
+      ROS_MASTER_URI: "http://roscore:11311/"
+    command: ["bash", "-c", "sleep 6; roslaunch turtlebot_teleop ps4_teleop.launch"]
+    devices:
+      - "/dev/input/js0:/dev/input/js0"
+    depends_on:
+      - ros-kinetic-gazebo
+
+  ros-kinetic-kobuki:
+    image: ros-kinetic-gazebo
+    environment:
+      ROS_MASTER_URI: "http://roscore:11311/"
+    command: ["bash", "-c", "sleep 15; roslaunch turtlebot_bringup minimal.launch"]
+    depends_on:
+      - ros-kinetic-gazebo
+
+  ros-kinetic-rviz:
+    image: ros-kinetic-gazebo
+    environment:
+      DISPLAY:
+      QT_X11_NO_MITSHM: "1"
+      ROS_MASTER_URI: "http://roscore:11311/"
+      TURTLEBOT_GAZEBO_WORLD_FILE: "/opt/ros/kinetic/share/turtlebot_gazebo/worlds/playground.world"
+    volumes:
+      - "/tmp/.X11-unix:/tmp/.X11-unix"
+    devices:
+      - "/dev/dri:/dev/dri"
+    command: ["rosrun", "rviz", "rviz"]
+    depends_on:
+      - roscore
